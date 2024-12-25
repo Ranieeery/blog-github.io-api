@@ -12,7 +12,7 @@ app.get("/api/images", (req, res) => {
         if (err) {
             return res.status(500).json({ error: "Failed to read directory" });
         }
-        const images = files.filter(file => {
+        const images = files.filter((file) => {
             const ext = path.extname(file).toLowerCase();
             return [".jpg", ".jpeg", ".png", ".gif"].includes(ext);
         });
@@ -23,7 +23,7 @@ app.get("/api/images", (req, res) => {
 app.get("/api/images/:imageName", (req, res) => {
     const imageName = req.params.imageName;
     const imagePath = path.join(__dirname, "images", imageName);
-    
+
     if (fs.existsSync(imagePath)) {
         res.sendFile(imagePath);
     } else {
