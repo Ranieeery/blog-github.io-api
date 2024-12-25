@@ -5,7 +5,7 @@ import fs from "fs";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use("./images", express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.get("/api/images", (req, res) => {
     fs.readdir(path.join(__dirname, "images"), (err: any, files: any[]) => {

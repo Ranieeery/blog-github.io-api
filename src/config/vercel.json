@@ -9,11 +9,11 @@
   "routes": [
     {
       "src": "/images/(.*)",
-      "dest": "/public/images/$1"
+      "dest": "/src/images/$1"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/(.*)",
+      "dest": "/src/app.ts"
     }
   ]
 }
