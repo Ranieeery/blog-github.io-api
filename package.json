@@ -1,9 +1,19 @@
 {
+  "name": "github.io-api",
+  "version": "1.0.0",
+  "description": "deploying a simple express app to vercel",
+  "main": "src/app.ts",
   "scripts": {
-    "start": "node index.js"
+    "start": "ts-node src/app.ts",
+    "build": "tsc",
+    "deploy": "vercel --prod"
   },
-
   "dependencies": {
     "express": "5.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "ts-node": "^10.4.0",
+    "typescript": "^5.7.2"
   }
 }

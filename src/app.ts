@@ -1,14 +1,14 @@
-const express = require("express");
-const path = require("path");
-const fs = require("fs");
+import express from "express";
+import path from "path";
+import fs from "fs";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("./images", express.static(path.join(__dirname, "images")));
 
 app.get("/api/images", (req, res) => {
-    fs.readdir(path.join(__dirname, "images"), (err, files) => {
+    fs.readdir(path.join(__dirname, "images"), (err: any, files: any[]) => {
         if (err) {
             return res.status(500).json({ error: "Failed to read directory" });
         }
@@ -31,6 +31,6 @@ app.get("/api/images/:imageName", (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
