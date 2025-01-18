@@ -8,11 +8,11 @@
   ],
   "routes": [
     {
-      "src": "/random",
+      "src": "/api/random",
       "dest": "/app.ts"
     },
     {
-      "src": "/:imageName",
+      "src": "/api/:imageName",
       "dest": "/app.ts"
     }
   ]
