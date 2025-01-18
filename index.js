@@ -4,7 +4,7 @@ import * as path from "path";
 
 const app = express();
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-const imagesFolder = path.join(__dirname, "public/images");
+const imagesFolder = path.join(__dirname, "images");
 
 const validExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
 
