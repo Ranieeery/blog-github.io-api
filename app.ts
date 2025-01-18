@@ -1,36 +1,63 @@
-import express from "express";
-import path from "path";
-import fs from "fs";
+import express, { Express, Request, Response } from "express";
+import * as fs from "fs";
+import * as path from "path";
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const app: Express = express();
+const port: number = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+const imagesFolder: string = path.join(__dirname, "images");
 
-app.use("/images", express.static(path.join(__dirname, "images")));
+// Allowed image extensions
+const validExtensions: string[] = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
 
-app.get("/api/images", (req, res) => {
-    fs.readdir(path.join(__dirname, "images"), (err: any, files: any[]) => {
-        if (err) {
-            return res.status(500).json({ error: "Failed to read directory" });
+app.get("/random", (req: Request, res: Response): void => {
+    fs.readdir(
+        imagesFolder,
+        (err: NodeJS.ErrnoException | null, files: string[]) => {
+            if (err) {
+                res.status(500).send("Erro ao ler a pasta de imagens");
+                return;
+            }
+
+            // Filter only valid image files
+            const imageFiles = files.filter(file => 
+                validExtensions.includes(path.extname(file).toLowerCase())
+            );
+
+            if (imageFiles.length === 0) {
+                res.status(404).send("Nenhuma imagem encontrada");
+                return;
+            }
+
+            const randomIndex: number = Math.floor(Math.random() * imageFiles.length);
+            const randomImage: string = imageFiles[randomIndex];
+            res.sendFile(path.join(imagesFolder, randomImage));
         }
-        const images = files.filter((file) => {
-            const ext = path.extname(file).toLowerCase();
-            return [".jpg", ".jpeg", ".png", ".gif"].includes(ext);
-        });
-        res.json({ images });
-    });
+    );
 });
 
-app.get("/api/images/:imageName", (req, res) => {
-    const imageName = req.params.imageName;
-    const imagePath = path.join(__dirname, "images", imageName);
+app.get("/:imageName", (req: Request, res: Response): void => {
+    const imageName: string = req.params.imageName;
+    const imagePath: string = path.join(imagesFolder, imageName);
 
-    if (fs.existsSync(imagePath)) {
-        res.sendFile(imagePath);
-    } else {
-        res.status(404).json({ error: "Image not found" });
+    // Validate file extension
+    if (!validExtensions.includes(path.extname(imageName).toLowerCase())) {
+        res.status(400).send("Formato de arquivo não suportado");
+        return;
     }
+
+    fs.access(
+        imagePath,
+        fs.constants.F_OK,
+        (err: NodeJS.ErrnoException | null) => {
+            if (err) {
+                res.status(404).send("A imagem solicitada não existe");
+            } else {
+                res.sendFile(imagePath);
+            }
+        }
+    );
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(port, () => {
+    console.log(`Servidor rodando na porta ${port}`);
 });
